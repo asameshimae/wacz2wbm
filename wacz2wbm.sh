@@ -29,8 +29,10 @@ fi
 
 # extract all urls from pages.jsonl into a txt file in the current dir. usually this is the seeds(?)
 unzip -p $FILE pages/pages.jsonl | perl -wnE 'say /"url"\s*:\s*"(.*?)"/i' > temp.txt
-# append all urls from extraPages.jsonl into the same txt file. this is the pages crawled including requisites(?)
+# append all urls from extraPages.jsonl into the same txt file. this is links followed from seeds(?)
 unzip -p $FILE pages/extraPages.jsonl | perl -wnE 'say /"url"\s*:\s*"(.*?)"/i' >> temp.txt
+# append all urls from nested archive indexes/index.cdx.gz. this is prereqs like images(?)
+unzip -p $FILE indexes/index.cdx.gz | gunzip | perl -wnE 'say /"url"\s*:\s*"(.*?)"/i' >> temp.txt
 
 # remove blank lines, save to the final txt file, remove temp file
 grep -v '^\s*$' temp.txt > $COLLECTION.txt
